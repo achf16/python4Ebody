@@ -19,4 +19,4 @@ except:
     print('Error, please enter a numeric input')
     quit()
 
-print('Pay: ',computepay(worked_hours, rate_per_hours))
+print('Pay',computepay(worked_hours, rate_per_hours))
