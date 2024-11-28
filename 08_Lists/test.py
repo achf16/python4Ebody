@@ -1,2 +1,5 @@
 s = "           Where               are           you"
-print(s.split())
+l = s.split()
+print(l)
+
+l.count()
