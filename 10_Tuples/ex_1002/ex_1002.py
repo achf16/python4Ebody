@@ -37,3 +37,4 @@ while True:
     sort_hours(hour_histogram)
     for key,value in hour_histogram.items():
         print(f"{key} {value}")
+
