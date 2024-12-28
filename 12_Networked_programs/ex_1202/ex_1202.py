@@ -97,3 +97,4 @@ while character_counter <= 3000:
         flag_once = False
     else:
         socket_setup(socket_init())
+
