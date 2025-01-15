@@ -14,8 +14,6 @@ import urllib.request, urllib.parse, urllib.error
 import os
 import re
 
-
-
 #------------------------------------
 #   Function definitions
 #------------------------------------
@@ -60,7 +58,6 @@ def mode1():
     requested_doc = init_server_request().read().decode()
     with open("temp.txt", 'w') as fhand:
         fhand.write(requested_doc)
-    # with open("temp.txt") as fhand:
     with open("temp.txt", 'r') as fhand:
         content = fhand.read()
         # TODO: clean the white spaces and to loop until 3k
