@@ -16,16 +16,17 @@ url_2request = None
 def socket_init():
     global flag_url_user_req, url_server, url_2request
     while True:
-        if flag_url_user_req:
+        while flag_url_user_req:
             url_2request = input("Enter the URL or 'done' to finish: ")
             if url_2request.lower() == 'done': quit()
             if not len(url_2request): url_2request = "http://data.pr4e.org/romeo.txt"
             try:
                 url_server = url_2request.split('/')[2]
                 # print(url_server)
+                flag_url_user_req = False
+                break
             except:
                 print("Invalid URL")
-            flag_url_user_req = False
         try:
             mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             mysock.connect((url_server, 80))
