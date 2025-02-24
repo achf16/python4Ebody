@@ -9,7 +9,7 @@ mysock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def socket_init():
     while True:
         url_requested = input("Enter the URL of the website or 'done' to finish: ")
-        if url_requested.lower() == 'done': quit()
+        if url_requested.lower().strip() == 'done': quit()
         try:
             url = url_requested.split('/')[2]
             print(url)

@@ -18,7 +18,7 @@ def socket_init():
     while True:
         while flag_url_user_req:
             url_2request = input("Enter the URL or 'done' to finish: ")
-            if url_2request.lower() == 'done': quit()
+            if url_2request.lower().strip() == 'done': quit()
             if not len(url_2request): url_2request = "http://data.pr4e.org/romeo.txt"
             try:
                 url_server = url_2request.split('/')[2]
@@ -40,7 +40,7 @@ def socket_setup(cmd_plus_mysock_tuple):
     cmd = cmd_plus_mysock_tuple[0]
     mysock.send(cmd)
     # print("SEND OK")
-    #To print the first 3k characters; there are several considerations to take in consideration:
+    #To print the first 3k characters; there are several things to take in consideration:
     #   @ White space:
     #       - Are white space considerate character? Yes or No
     #   @ Should I save part, whole or nothing of the document

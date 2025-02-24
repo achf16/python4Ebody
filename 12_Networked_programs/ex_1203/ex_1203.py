@@ -20,7 +20,7 @@ import re
 def init_server_request():
     while True:
         url_2request = input("Write the url to request or 'done' to exit: ")
-        if url_2request == 'done': quit()
+        if url_2request.lower().strip() == 'done': quit()
         elif not len(url_2request): url_2request = "http://data.pr4e.org/romeo.txt"
         try:
             retrv_doc = urllib.request.urlopen(url_2request)

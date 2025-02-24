@@ -15,7 +15,7 @@ def init():
     ctx.verify_mode = ssl.CERT_NONE
     while True:
         url = input('Enter an URL or "done" to finish: ')
-        if url == 'done': quit()
+        if url.lower().strip() == 'done': quit()
         elif not len(url): url = "https://docs.python.org"
         try:
             html = urllib.request.urlopen(url, context=ctx).read()
