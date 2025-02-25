@@ -29,13 +29,13 @@ def socket_init():
         except:
             print("Connection failed")
 
-
 def server_separator(url):
     s = re.match(r'https?://([a-z].+[.][a-z]+)/',url)
+    if s is None:
+        return None
     return s.group(1).lower()
 
 def recv_process(my_s):
-    #TODO: OS libraries for clean temp file
     # noinspection SqlNoDataSourceInspection
     print("Select the reception mode or 'done' to finish: \n"
           "There are four ways to solve this problem:\n"
@@ -70,7 +70,7 @@ def recv_process(my_s):
                 mode3(my_s)
                 break
             case '4':
-                # mode4()
+                mode4(my_s)
                 break
             case 'done':
                 quit()
@@ -95,48 +95,30 @@ def mode1(mysocket):
 def mode2(mysocket):
     # It's important to keep in mind the case when the first \n is in a chunk
     # and the second one on the next chunk
-    second_state_flag = 0  # The second state is the free running
-    separate_nn_flag = 0  # if this flag is equal to two, means that the \n\n are separate in two different chunks
-    header_end_founded = 0  # this flag is 1 when \n\n is founded
+    buffer = ""
+    buffer_flag = True
     while True:
-        data = mysocket.recv(50).decode()
-        data = data.replace("\r\n", "\n")
+        data = mysocket.recv(1).decode()
         if len(data) < 1: break
-
-        if  second_state_flag == 0:
-            # print(data)
-            # Case when both \n\n are at the same chunk
-            header_last_index = data.find("\n\n")
-            # print(header_last_index)
-            if header_last_index != -1:
-                print(data[data.find("\n\n")+2:], end="")
-                second_state_flag = 1
-                header_end_founded = 1
-                continue
-
-            # case when the \n\n are at different chunks
-            if header_end_founded == 0:
-                if data.endswith("\n") and separate_nn_flag == 0 :
-                    separate_nn_flag += 1
-                    # print("encontrada la primera")
-                    continue
-                if data.startswith("\n") and separate_nn_flag == 1:
-                    print(data[1:])
-                    # print("encontrada la segunda")
-                    second_state_flag = 1
-                else: separate_nn_flag = 0
-        if second_state_flag:
-            print(data, end = "")
+        if buffer_flag:
+            buffer += data
+            buffer = buffer.replace("\r\n","\n")
+            data_index = buffer.find("\n\n")
+            if  data_index < 0: continue
+            print(buffer[data_index+2:])
+            buffer_flag = False
+        else: print(data, end = "")
+    print("")
 
 def mode3(mysocket):
     buffer = ""
     buffer_flag = 1
     while True:
-        data = mysocket.recv(100).decode()
-        data = data.replace("\r\n", "\n")
+        data = mysocket.recv(1).decode()
         if len(data) < 1: break
         if buffer_flag:
             buffer += data
+            buffer = buffer.replace("\r\n", "\n")
         data_index = buffer.find("\n\n")
         if data_index == -1: continue
         if buffer_flag:
@@ -153,7 +135,23 @@ def mode3(mysocket):
     delete_temp_file()
     mysocket.close()
 
-
+def mode4(mysocket):
+    while True:
+        data = mysocket.recv(1024).decode()
+        if len(data) < 1: break
+        with open("temp.txt","w") as fhand:
+            fhand.write(data)
+    with open("temp.txt","r+") as fhand:
+        data = fhand.read().replace("\r\n","\n")
+        header_index = data.find("\n\n")
+        fhand.seek(0)
+        fhand.write(data[header_index+2:])
+        fhand.truncate()
+        fhand.seek(0)
+        buffer = fhand.read()
+        print(buffer)
+    delete_temp_file()
+    mysocket.close()
 
 def delete_temp_file():
     if os.path.exists("temp.txt"):
